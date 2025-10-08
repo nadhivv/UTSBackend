@@ -1,0 +1,11 @@
+            "alumni_id": 18,
+            "nama_perusahaan": "PT Sinasmas Indonesia",
+            "posisi_jabatan": "Quality Assurance",
+            "bidang_industri": "Teknologi Informatika",
+            "lokasi_kerja": "Surabaya",
+            "gaji_range": "7999934",
+            "tanggal_mulai_kerja": "2021-02-28T00:00:00Z",
+            "tanggal_selesai_kerja": "2024-06-30T00:00:00Z",
+            "status_pekerjaan": "selesai",
+            "deskripsi_pekerjaan": "Melakukan Quality Control",
+            "isdeleted": false
