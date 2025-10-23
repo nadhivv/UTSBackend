@@ -12,7 +12,7 @@ var jwtSecret = []byte("your-secret-key-min-32-characters-long")
 // GenerateToken membuat JWT token berdasarkan data Alumni
 func GenerateToken(alumni model.Alumni) (string, error) {
 	claims := model.JWTClaims{
-		UserID: alumni.ID,
+		UserID: alumni.ID.Hex(),
 		Email:  alumni.Email,
 		Role:   alumni.Role,
 		RegisteredClaims: jwt.RegisteredClaims{

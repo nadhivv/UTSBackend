@@ -1,15 +1,16 @@
 package route
 
 import (
-	"database/sql"
+	// "database/sql"
 	"TM4/app/repository"
 	"TM4/app/service"
 	"TM4/middleware"
 
 	"github.com/gofiber/fiber/v2"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
-func SetupRoutes(app *fiber.App, db *sql.DB) {
+func SetupRoutes(app *fiber.App, db *mongo.Database) {
 	api := app.Group("/TM4")
 
 	// === Auth ===
@@ -17,15 +18,10 @@ func SetupRoutes(app *fiber.App, db *sql.DB) {
 	authService := service.NewAuthService(alumniRepo)
 	api.Post("/login", authService.Login)
 
-	// === Tanpa Pekerjaan ===
-	nganggurRepo := &repository.NganggurRepository{DB: db}
-	nganggurService := service.NewNganggurService(nganggurRepo)
-
 	// === Alumni ===
 	alumniService := service.NewAlumniService(alumniRepo)
 	alumni := api.Group("/alumni")
 	alumni.Get("/", middleware.AuthRequired(), alumniService.GetAlumni)
-	alumni.Get("/nganggur", middleware.AuthRequired(), nganggurService.GetAll)
 	alumni.Get("/:id", middleware.AuthRequired(), alumniService.GetByID)
 
 	// === Admin ===
