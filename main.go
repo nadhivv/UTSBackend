@@ -30,38 +30,36 @@
 package main
 
 import (
-	"fmt"
 	"log"
-
-	"TM4/config"
-	"TM4/database"
+	"context"
+	"time"
 	"TM4/route"
 
 	"github.com/gofiber/fiber/v2"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 func main() {
-	// Load environment variable
-	config.LoadEnv()
+	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI("mongodb://localhost:27017"))
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer client.Disconnect(context.TODO())
 
-	// Koneksi ke MongoDB
-	database.ConnectDB()
-	defer database.DisconnectDB()
-	log.Println("✅ MongoDB connected successfully")
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+	defer cancel()
+	err = client.Ping(ctx, nil)
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	// Setup Fiber app
+	db := client.Database("alumni") 
+
 	app := fiber.New()
-	route.SetupRoutes(app, database.DB)
 
-	// Debug: tampilkan semua route
-	for _, r := range app.GetRoutes() {
-		fmt.Println(r.Method, r.Path)
-	}
+	route.SetupRoutes(app, db)
 
-	// Jalankan server
-	port := config.GetEnv("APP_PORT")
-	if port == "" {
-		port = "8080"
-	}
-	log.Fatal(app.Listen(fmt.Sprintf(":%s", port)))
+	log.Fatal(app.Listen(":3000"))
+
 }

@@ -11,225 +11,6 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-// type PekerjaanService struct {
-// 	repo *repository.PekerjaanRepository
-// }
-
-// func NewPekerjaanService(repo *repository.PekerjaanRepository) *PekerjaanService {
-// 	return &PekerjaanService{repo: repo}
-// }
-
-// // === GET Pekerjaan by ID ===
-// func (s *PekerjaanService) GetByID(c *fiber.Ctx) error {
-// 	id, err := strconv.Atoi(c.Params("id"))
-// 	if err != nil {
-// 		return helper.ResponseJSON(c, 400, "Invalid ID", false, nil)
-// 	}
-// 	pekerjaan, err := s.repo.GetByID(id)
-// 	if err != nil {
-// 		return helper.ResponseJSON(c, 404, "Pekerjaan not found", false, nil)
-// 	}
-// 	return helper.ResponseJSON(c, 200, "Success", true, pekerjaan)
-// }
-
-// // === GET Pekerjaan by Alumni ID ===
-// func (s *PekerjaanService) GetByAlumniID(c *fiber.Ctx) error {
-// 	alumniID, err := strconv.Atoi(c.Params("alumni_id"))
-// 	if err != nil {
-// 		return helper.ResponseJSON(c, 400, "Invalid Alumni ID", false, nil)
-// 	}
-// 	pekerjaan, err := s.repo.GetByAlumniID(alumniID)
-// 	if err != nil {
-// 		return helper.ResponseJSON(c, 500, err.Error(), false, nil)
-// 	}
-// 	return helper.ResponseJSON(c, 200, "Success", true, pekerjaan)
-// }
-
-// // === CREATE Pekerjaan ===
-// func (s *PekerjaanService) Create(c *fiber.Ctx) error {
-// 	var input model.CreatePekerjaan
-// 	if err := c.BodyParser(&input); err != nil {
-// 		return helper.ResponseJSON(c, 400, "Invalid body", false, nil)
-// 	}
-// 	id, err := s.repo.Create(input)
-// 	if err != nil {
-// 		return helper.ResponseJSON(c, 500, err.Error(), false, nil)
-// 	}
-// 	return helper.ResponseJSON(c, 201, "Pekerjaan created", true, fiber.Map{"id": id})
-// }
-
-// // === UPDATE Pekerjaan ===
-// func (s *PekerjaanService) Update(c *fiber.Ctx) error {
-// 	id, err := strconv.Atoi(c.Params("id"))
-// 	if err != nil {
-// 		return helper.ResponseJSON(c, 400, "Invalid ID", false, nil)
-// 	}
-// 	var input model.UpdatePekerjaan
-// 	if err := c.BodyParser(&input); err != nil {
-// 		return helper.ResponseJSON(c, 400, "Invalid body", false, nil)
-// 	}
-// 	if err := s.repo.Update(id, input); err != nil {
-// 		return helper.ResponseJSON(c, 500, err.Error(), false, nil)
-// 	}
-// 	return helper.ResponseJSON(c, 200, "Pekerjaan updated successfully", true, nil)
-// }
-
-// // === DELETE Pekerjaan ===
-// func (s *PekerjaanService) Delete(c *fiber.Ctx) error {
-// 	id, err := strconv.Atoi(c.Params("id"))
-// 	if err != nil {
-// 		return helper.ResponseJSON(c, 400, "Invalid ID", false, nil)
-// 	}
-// 	if err := s.repo.Delete(id); err != nil {
-// 		return helper.ResponseJSON(c, 500, err.Error(), false, nil)
-// 	}
-// 	return helper.ResponseJSON(c, 200, "Pekerjaan deleted successfully", true, nil)
-// }
-
-// func (s *PekerjaanService) GetAll(c *fiber.Ctx) error {
-// 	page, _ := strconv.Atoi(c.Query("page", "1"))
-// 	limit, _ := strconv.Atoi(c.Query("limit", "10"))
-// 	sortBy := c.Query("sortBy", "id")
-// 	order := c.Query("order", "asc")
-// 	search := c.Query("search", "")
-
-// 	offset := (page - 1) * limit
-
-// 	// whitelist kolom sort
-// 	sortWhitelist := map[string]bool{
-// 		"id": true, "alumni_id": true, "nama_perusahaan": true, "posisi_jabatan": true,
-// 		"bidang_industri": true, "lokasi_kerja": true, "gaji_range": true,
-// 		"tanggal_mulai_kerja": true, "tanggal_selesai_kerja": true, "status_pekerjaan": true, "deskripsi_pekerjaan": true, "created_at": true,
-// 	}
-// 	if !sortWhitelist[sortBy] {
-// 		sortBy = "id"
-// 	}
-// 	if strings.ToLower(order) != "desc" {
-// 		order = "asc"
-// 	}
-
-// 	pekerjaan, err := s.repo.GetAll(search, sortBy, order, limit, offset)
-// 	if err != nil {
-// 		return helper.ResponseJSON(c, 500, "Failed to fetch pekerjaan alumni", false, nil)
-// 	}
-
-// 	total, err := s.repo.Count(search)
-// 	if err != nil {
-// 		return helper.ResponseJSON(c, 500, "Failed to count pekerjaan alumni", false, nil)
-// 	}
-
-// 	response := model.PekerjaanResponse{
-// 		Data: pekerjaan,
-// 		Meta: model.MetaInfo{
-// 			Page:   page,
-// 			Limit:  limit,
-// 			Total:  total,
-// 			Pages:  (total + limit - 1) / limit,
-// 			SortBy: sortBy,
-// 			Order:  order,
-// 			Search: search,
-// 		},
-// 	}
-// 	return c.JSON(response)
-// }
-
-// func (s *PekerjaanService) SoftDelete(c *fiber.Ctx) error {
-// 	role := c.Locals("role").(string)
-// 	userID := c.Locals("user_id")
-// 	idStr := c.Query("id")
-
-// 	if idStr != "" {
-// 		id, err := strconv.Atoi(idStr)
-// 		if err != nil {
-// 			return c.Status(400).JSON(fiber.Map{
-// 				"success": false,
-// 				"message": "Invalid ID",
-// 				"data":    nil,
-// 			})
-// 		}
-
-// 		existingData, err := s.repo.GetByID(id)
-// 		if err != nil {
-// 			return c.Status(404).JSON(fiber.Map{
-// 				"success": false,
-// 				"message": "pekerjaan not found",
-// 				"data":    nil,
-// 			})
-// 		}
-
-// 		if role != "admin" && existingData.AlumniID != userID {
-// 			return c.Status(403).JSON(fiber.Map{
-// 				"success": false,
-// 				"message": "bukan pekerjaanmu",
-// 				"data":    nil,
-// 			})
-// 		}
-
-// 		var updateReq model.UpdatePekerjaan
-// 		if err := s.repo.SoftDelete(id, updateReq); err != nil {
-// 			return c.Status(500).JSON(fiber.Map{
-// 				"success": false,
-// 				"message": err.Error(),
-// 				"data":    nil,
-// 			})
-// 		}
-
-// 		return c.JSON(fiber.Map{
-// 			"success": true,
-// 			"message": "pekerjaan soft deleted",
-// 			"data":    nil,
-// 		})
-// 	}
-
-// 	if role != "admin" {
-// 		return c.Status(403).JSON(fiber.Map{
-// 			"success": false,
-// 			"message": "unauthorized: admin access required",
-// 			"data":    nil,
-// 		})
-// 	}
-
-// 	if err := s.repo.SoftDeleteBulk(); err != nil {
-// 		return c.Status(500).JSON(fiber.Map{
-// 			"success": false,
-// 			"message": err.Error(),
-// 			"data":    nil,
-// 		})
-// 	}
-
-// 	return c.JSON(fiber.Map{
-// 		"success": true,
-// 		"message": "all pekerjaan soft deleted",
-// 		"data":    nil,
-// 	})
-// }
-
-// func (s *PekerjaanService) Trash(c *fiber.Ctx) error {
-// 	pekerjaan, err := s.repo.Trash()
-// 	if err != nil {
-// 		return helper.ResponseJSON(c, 500, err.Error(), false, nil)
-// 	}
-// 	return helper.ResponseJSON(c, 200, "Success", true, pekerjaan)
-// }
-
-// func (s *PekerjaanService) Restore(c *fiber.Ctx) error {
-// 	err := s.repo.Restore()
-// 	if err != nil {
-// 		return helper.ResponseJSON(c, 500, err.Error(), false, nil)
-// 	}
-// 	return helper.ResponseJSON(c, 200, "Semua data berhasil direstore", true, nil)
-// }
-
-// func (s *PekerjaanService) HardDelete(c *fiber.Ctx) error {
-// 	err := s.repo.HardDelete()
-// 	if err != nil {
-// 		return helper.ResponseJSON(c, 500, err.Error(), false, nil)
-// 	}
-// 	return helper.ResponseJSON(c, 200, "Semua data dihapus secara permanen", true, nil)
-// }
-
-
-
 
 type PekerjaanService struct {
 	repo repository.IPekerjaanRepository
@@ -239,6 +20,12 @@ func NewPekerjaanService(repo repository.IPekerjaanRepository) *PekerjaanService
 	return &PekerjaanService{repo: repo}
 }
 
+// @Summary Get pekerjaan by ID
+// @Tags Pekerjaan
+// @Param id path string true "Pekerjaan ID"
+// @Success 200 {object} model.Pekerjaan
+// @Failure 404 {object} map[string]interface{}
+// @Router /pekerjaan/{id} [get]	
 // === GET Pekerjaan by ID ===
 func (s *PekerjaanService) GetByID(c *fiber.Ctx) error {
 	idParam := c.Params("id")
@@ -250,6 +37,11 @@ func (s *PekerjaanService) GetByID(c *fiber.Ctx) error {
 	return helper.ResponseJSON(c, 200, "Success", true, pekerjaan)
 }
 
+// @Summary Get pekerjaan by Alumni ID
+// @Tags Pekerjaan
+// @Param alumni_id path string true "Alumni ID"
+// @Success 200 {array} model.Pekerjaan
+// @Router /pekerjaan/alumni/{alumni_id} [get]
 // === GET Pekerjaan by Alumni ID ===
 func (s *PekerjaanService) GetByAlumniID(c *fiber.Ctx) error {
 	alumniIDParam := c.Params("alumni_id")
@@ -267,6 +59,13 @@ func (s *PekerjaanService) GetByAlumniID(c *fiber.Ctx) error {
 	return helper.ResponseJSON(c, 200, "Success", true, pekerjaan)
 }
 
+// @Summary Create pekerjaan
+// @Tags Pekerjaan
+// @Accept json
+// @Produce json
+// @Param pekerjaan body model.CreatePekerjaan true "Data pekerjaan"
+// @Success 201 {object} map[string]interface{}
+// @Router /pekerjaan [post]
 // === CREATE Pekerjaan ===
 func (s *PekerjaanService) Create(c *fiber.Ctx) error {
 	var input model.CreatePekerjaan
@@ -284,6 +83,12 @@ func (s *PekerjaanService) Create(c *fiber.Ctx) error {
 	})
 }
 
+// @Summary Update pekerjaan
+// @Tags Pekerjaan
+// @Param id path string true "Pekerjaan ID"
+// @Param pekerjaan body model.UpdatePekerjaan true "Updated Data"
+// @Success 200 {object} map[string]interface{}
+// @Router /pekerjaan/{id} [put]
 // === UPDATE Pekerjaan ===
 func (s *PekerjaanService) Update(c *fiber.Ctx) error {
 	idParam := c.Params("id")
@@ -299,6 +104,11 @@ func (s *PekerjaanService) Update(c *fiber.Ctx) error {
 	return helper.ResponseJSON(c, 200, "Pekerjaan updated successfully", true, nil)
 }
 
+// @Summary Delete pekerjaan
+// @Tags Pekerjaan
+// @Param id path string true "Pekerjaan ID"
+// @Success 200 {object} map[string]interface{}
+// @Router /pekerjaan/{id} [delete]
 // === DELETE Pekerjaan ===
 func (s *PekerjaanService) Delete(c *fiber.Ctx) error {
 	idParam := c.Params("id")
@@ -309,6 +119,20 @@ func (s *PekerjaanService) Delete(c *fiber.Ctx) error {
 	return helper.ResponseJSON(c, 200, "Pekerjaan deleted successfully", true, nil)
 }
 
+// GetAll godoc
+// @Summary Get all pekerjaan
+// @Description Ambil semua data pekerjaan dengan pagination, sorting & search
+// @Tags Pekerjaan
+// @Accept json
+// @Produce json
+// @Param search query string false "Search keyword"
+// @Param limit query int false "Limit data per halaman"
+// @Param offset query int false "Offset data"
+// @Param sortBy query string false "Kolom untuk sorting"
+// @Param order query string false "Urutan sorting (asc/desc)"
+// @Success 200 {object} map[string]interface{}
+// @Failure 500 {object} map[string]interface{}
+// @Router /TM4/pekerjaan [get]
 // === GET ALL Pekerjaan ===
 func (s *PekerjaanService) GetAll(c *fiber.Ctx) error {
     search := c.Query("search", "")
@@ -333,7 +157,16 @@ func (s *PekerjaanService) GetAll(c *fiber.Ctx) error {
     })
 }
 
-
+// SoftDelete godoc
+// @Summary Soft delete pekerjaan
+// @Description Mengubah status pekerjaan menjadi terhapus (soft delete)
+// @Tags Pekerjaan
+// @Accept json
+// @Produce json
+// @Param id query string true "ID pekerjaan"
+// @Success 200 {object} map[string]interface{}
+// @Failure 500 {object} map[string]interface{}
+// @Router /TM4/pekerjaan/softdelete [put]
 // === SOFT DELETE ===
 func (s *PekerjaanService) SoftDelete(c *fiber.Ctx) error {
 	idParam := c.Params("id")
@@ -345,6 +178,20 @@ func (s *PekerjaanService) SoftDelete(c *fiber.Ctx) error {
 	return helper.ResponseJSON(c, 200, "Pekerjaan soft deleted", true, nil)
 }
 
+// Trash godoc
+// @Summary Get list of soft-deleted pekerjaan
+// @Description Menampilkan pekerjaan yang berada di trash (soft deleted)
+// @Tags Pekerjaan
+// @Accept json
+// @Produce json
+// @Param page query int false "Page number"
+// @Param limit query int false "Limit per page"
+// @Param search query string false "Search keyword"
+// @Param sortBy query string false "Sort column"
+// @Param order query string false "Sort order (asc/desc)"
+// @Success 200 {object} model.PekerjaanResponse
+// @Failure 500 {object} map[string]interface{}
+// @Router /TM4/pekerjaan/trash [get]
 // === TRASH ===
 func (s *PekerjaanService) Trash(c *fiber.Ctx) error {
 	page, _ := strconv.Atoi(c.Query("page", "1"))
@@ -354,11 +201,13 @@ func (s *PekerjaanService) Trash(c *fiber.Ctx) error {
 	search := c.Query("search", "")
 	offset := (page - 1) * limit
 
+	// ambil data pekerjaan yang sudah dihapus
 	pekerjaan, err := s.repo.Trash(context.Background(), search, sortBy, order, limit, offset)
 	if err != nil {
 		return helper.ResponseJSON(c, 500, err.Error(), false, nil)
 	}
 
+	// hitung total dokumen yang dihapus
 	total, err := s.repo.CountTrash(context.Background(), search)
 	if err != nil {
 		return helper.ResponseJSON(c, 500, err.Error(), false, nil)
@@ -379,6 +228,17 @@ func (s *PekerjaanService) Trash(c *fiber.Ctx) error {
 	return c.JSON(response)
 }
 
+
+// Restore godoc
+// @Summary Restore soft-deleted pekerjaan
+// @Description Mengembalikan pekerjaan yang telah di-soft delete
+// @Tags Pekerjaan
+// @Accept json
+// @Produce json
+// @Param id query string true "ID pekerjaan"
+// @Success 200 {object} map[string]interface{}
+// @Failure 500 {object} map[string]interface{}
+// @Router /TM4/pekerjaan/restore [put]
 // === RESTORE ===
 func (s *PekerjaanService) Restore(c *fiber.Ctx) error {
 	idParam := c.Params("id")
@@ -389,6 +249,16 @@ func (s *PekerjaanService) Restore(c *fiber.Ctx) error {
 
 	return helper.ResponseJSON(c, 200, "Pekerjaan restored successfully", true, nil)
 }
+
+// HardDelete godoc
+// @Summary Permanently delete all pekerjaan
+// @Description Menghapus seluruh data pekerjaan secara permanen (tidak dapat dikembalikan)
+// @Tags Pekerjaan
+// @Accept json
+// @Produce json
+// @Success 200 {object} map[string]interface{}
+// @Failure 500 {object} map[string]interface{}
+// @Router /TM4/pekerjaan/harddelete [delete]
 
 // === HARD DELETE ===
 func (s *PekerjaanService) HardDelete(c *fiber.Ctx) error {

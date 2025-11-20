@@ -1,0 +1,854 @@
+definitions:
+  model.Alumni:
+    properties:
+      alamat:
+        type: string
+      angkatan:
+        type: integer
+      created_at:
+        type: string
+      email:
+        type: string
+      id:
+        type: string
+      jurusan:
+        type: string
+      nama:
+        type: string
+      nim:
+        type: string
+      no_telepon:
+        type: string
+      role:
+        type: string
+      tahun_lulus:
+        type: integer
+      updated_at:
+        type: string
+    type: object
+  model.AlumniResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/model.Alumni'
+        type: array
+      meta:
+        $ref: '#/definitions/model.MetaInfo'
+    type: object
+  model.CreateAlumni:
+    properties:
+      alamat:
+        type: string
+      angkatan:
+        type: integer
+      email:
+        type: string
+      jurusan:
+        type: string
+      nama:
+        type: string
+      nim:
+        type: string
+      no_telepon:
+        type: string
+      password:
+        type: string
+      role:
+        type: string
+      tahun_lulus:
+        type: integer
+    type: object
+  model.CreatePekerjaan:
+    properties:
+      alumni_id:
+        type: string
+      bidang_industri:
+        type: string
+      deskripsi_pekerjaan:
+        type: string
+      gaji_range:
+        type: string
+      lokasi_kerja:
+        type: string
+      nama_perusahaan:
+        type: string
+      posisi_jabatan:
+        type: string
+      status_pekerjaan:
+        type: string
+      tanggal_mulai_kerja:
+        type: string
+      tanggal_selesai_kerja:
+        type: string
+    type: object
+  model.File:
+    properties:
+      alumni_id:
+        type: string
+      file_name:
+        type: string
+      file_path:
+        type: string
+      file_size:
+        type: integer
+      file_type:
+        type: string
+      id:
+        type: string
+      is_deleted:
+        type: boolean
+      original_name:
+        type: string
+      uploaded_at:
+        type: string
+    type: object
+  model.FileResponse:
+    properties:
+      alumni_id:
+        type: string
+      file_name:
+        type: string
+      file_path:
+        type: string
+      file_size:
+        type: integer
+      file_type:
+        type: string
+      id:
+        type: string
+      original_name:
+        type: string
+      uploaded_at:
+        type: string
+    type: object
+  model.LoginRequest:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
+  model.LoginResponse:
+    properties:
+      alumni:
+        $ref: '#/definitions/model.Alumni'
+      token:
+        type: string
+    type: object
+  model.MetaInfo:
+    properties:
+      limit:
+        type: integer
+      order:
+        type: string
+      page:
+        type: integer
+      pages:
+        type: integer
+      search:
+        type: string
+      sortBy:
+        type: string
+      total:
+        type: integer
+    type: object
+  model.Pekerjaan:
+    properties:
+      alumni_id:
+        type: string
+      bidang_industri:
+        type: string
+      created_at:
+        type: string
+      deskripsi_pekerjaan:
+        type: string
+      gaji_range:
+        type: string
+      id:
+        type: string
+      lokasi_kerja:
+        type: string
+      nama_perusahaan:
+        type: string
+      posisi_jabatan:
+        type: string
+      status_pekerjaan:
+        type: string
+      tanggal_mulai_kerja:
+        type: string
+      tanggal_selesai_kerja:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  model.PekerjaanResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/model.Pekerjaan'
+        type: array
+      meta:
+        $ref: '#/definitions/model.MetaInfo'
+    type: object
+  model.UpdateAlumni:
+    properties:
+      alamat:
+        type: string
+      angkatan:
+        type: integer
+      email:
+        type: string
+      jurusan:
+        type: string
+      nama:
+        type: string
+      no_telepon:
+        type: string
+      password:
+        type: string
+      role:
+        type: string
+      tahun_lulus:
+        type: integer
+    type: object
+  model.UpdatePekerjaan:
+    properties:
+      bidang_industri:
+        type: string
+      deskripsi_pekerjaan:
+        type: string
+      gaji_range:
+        type: string
+      lokasi_kerja:
+        type: string
+      nama_perusahaan:
+        type: string
+      posisi_jabatan:
+        type: string
+      status_pekerjaan:
+        type: string
+      tanggal_mulai_kerja:
+        type: string
+      tanggal_selesai_kerja:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /TM4/file/{id}:
+    delete:
+      description: Menghapus file dari server dan database berdasarkan ID
+      parameters:
+      - description: File ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Delete a file
+      tags:
+      - Files
+    put:
+      consumes:
+      - application/json
+      description: Mengubah informasi file berdasarkan ID
+      parameters:
+      - description: File ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Updated file data
+        in: body
+        name: file
+        required: true
+        schema:
+          $ref: '#/definitions/model.File'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Update file metadata
+      tags:
+      - Files
+  /TM4/file/alumni/{alumni_id}:
+    get:
+      consumes:
+      - application/json
+      description: Mengambil semua file yang dimiliki oleh alumni berdasarkan alumni_id
+      parameters:
+      - description: Alumni ID
+        in: path
+        name: alumni_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get files uploaded by specific alumni
+      tags:
+      - Files
+  /TM4/login:
+    post:
+      consumes:
+      - application/json
+      description: Login menggunakan email dan password untuk mendapatkan JWT token
+      parameters:
+      - description: Login Data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.LoginResponse'
+        "400":
+          description: Invalid Request Format
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: Invalid Email or Password
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Failed to Generate Token
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Login Alumni
+      tags:
+      - Auth
+  /TM4/pekerjaan:
+    get:
+      consumes:
+      - application/json
+      description: Ambil semua data pekerjaan dengan pagination, sorting & search
+      parameters:
+      - description: Search keyword
+        in: query
+        name: search
+        type: string
+      - description: Limit data per halaman
+        in: query
+        name: limit
+        type: integer
+      - description: Offset data
+        in: query
+        name: offset
+        type: integer
+      - description: Kolom untuk sorting
+        in: query
+        name: sortBy
+        type: string
+      - description: Urutan sorting (asc/desc)
+        in: query
+        name: order
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get all pekerjaan
+      tags:
+      - Pekerjaan
+  /TM4/pekerjaan/restore:
+    put:
+      consumes:
+      - application/json
+      description: Mengembalikan pekerjaan yang telah di-soft delete
+      parameters:
+      - description: ID pekerjaan
+        in: query
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Restore soft-deleted pekerjaan
+      tags:
+      - Pekerjaan
+  /TM4/pekerjaan/softdelete:
+    put:
+      consumes:
+      - application/json
+      description: Mengubah status pekerjaan menjadi terhapus (soft delete)
+      parameters:
+      - description: ID pekerjaan
+        in: query
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Soft delete pekerjaan
+      tags:
+      - Pekerjaan
+  /TM4/pekerjaan/trash:
+    get:
+      consumes:
+      - application/json
+      description: Menampilkan pekerjaan yang berada di trash (soft deleted)
+      parameters:
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Limit per page
+        in: query
+        name: limit
+        type: integer
+      - description: Search keyword
+        in: query
+        name: search
+        type: string
+      - description: Sort column
+        in: query
+        name: sortBy
+        type: string
+      - description: Sort order (asc/desc)
+        in: query
+        name: order
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.PekerjaanResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get list of soft-deleted pekerjaan
+      tags:
+      - Pekerjaan
+  /alumni:
+    get:
+      consumes:
+      - application/json
+      description: Mengambil daftar alumni dengan pagination, sorting, dan search
+      parameters:
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Limit per page
+        in: query
+        name: limit
+        type: integer
+      - description: Search keyword
+        in: query
+        name: search
+        type: string
+      - description: Sort column
+        in: query
+        name: sortBy
+        type: string
+      - description: Sort order (asc/desc)
+        in: query
+        name: order
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.AlumniResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get list of alumni
+      tags:
+      - Alumni
+    post:
+      consumes:
+      - application/json
+      description: Membuat data alumni baru
+      parameters:
+      - description: Alumni Data
+        in: body
+        name: alumni
+        required: true
+        schema:
+          $ref: '#/definitions/model.CreateAlumni'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Create new alumni
+      tags:
+      - Alumni
+  /alumni/{id}:
+    delete:
+      description: Menghapus data alumni berdasarkan ID
+      parameters:
+      - description: Alumni ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Delete alumni
+      tags:
+      - Alumni
+    get:
+      consumes:
+      - application/json
+      description: Ambil data alumni berdasarkan ID
+      parameters:
+      - description: Alumni ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Alumni'
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get alumni by ID
+      tags:
+      - Alumni
+    put:
+      consumes:
+      - application/json
+      description: Mengubah data alumni berdasarkan ID
+      parameters:
+      - description: Alumni ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Updated Alumni Data
+        in: body
+        name: alumni
+        required: true
+        schema:
+          $ref: '#/definitions/model.UpdateAlumni'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Update alumni data
+      tags:
+      - Alumni
+  /files:
+    get:
+      parameters:
+      - description: Search keyword
+        in: query
+        name: search
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.FileResponse'
+            type: array
+      summary: Get all files
+      tags:
+      - Files
+  /files/{id}:
+    get:
+      parameters:
+      - description: File ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.FileResponse'
+      summary: Get file by ID
+      tags:
+      - Files
+  /files/upload:
+    post:
+      consumes:
+      - multipart/form-data
+      parameters:
+      - description: File to upload
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/model.FileResponse'
+      summary: Upload file (User)
+      tags:
+      - Files
+  /files/upload/{alumni_id}:
+    post:
+      consumes:
+      - multipart/form-data
+      parameters:
+      - description: Alumni ID
+        in: path
+        name: alumni_id
+        required: true
+        type: string
+      - description: File
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/model.FileResponse'
+      summary: Upload file as Admin
+      tags:
+      - Files
+  /pekerjaan:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Data pekerjaan
+        in: body
+        name: pekerjaan
+        required: true
+        schema:
+          $ref: '#/definitions/model.CreatePekerjaan'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Create pekerjaan
+      tags:
+      - Pekerjaan
+  /pekerjaan/{id}:
+    delete:
+      parameters:
+      - description: Pekerjaan ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Delete pekerjaan
+      tags:
+      - Pekerjaan
+    get:
+      parameters:
+      - description: Pekerjaan ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Pekerjaan'
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get pekerjaan by ID
+      tags:
+      - Pekerjaan
+    put:
+      parameters:
+      - description: Pekerjaan ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Updated Data
+        in: body
+        name: pekerjaan
+        required: true
+        schema:
+          $ref: '#/definitions/model.UpdatePekerjaan'
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Update pekerjaan
+      tags:
+      - Pekerjaan
+  /pekerjaan/alumni/{alumni_id}:
+    get:
+      parameters:
+      - description: Alumni ID
+        in: path
+        name: alumni_id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Pekerjaan'
+            type: array
+      summary: Get pekerjaan by Alumni ID
+      tags:
+      - Pekerjaan
+swagger: "2.0"

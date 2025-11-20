@@ -62,7 +62,6 @@ type Pekerjaan struct {
 	DeskripsiPekerjaan  *string            `bson:"deskripsi_pekerjaan,omitempty" json:"deskripsi_pekerjaan,omitempty"`
 	CreatedAt           time.Time          `bson:"created_at" json:"created_at"`
 	UpdatedAt           time.Time          `bson:"updated_at" json:"updated_at"`
-	IsDeleted           bool               `bson:"isdeleted" json:"-"`
 }
 
 type CreatePekerjaan struct {
@@ -76,7 +75,6 @@ type CreatePekerjaan struct {
 	TanggalSelesaiKerja *string `bson:"tanggal_selesai_kerja,omitempty" json:"tanggal_selesai_kerja,omitempty"`
 	StatusPekerjaan     string  `bson:"status_pekerjaan" json:"status_pekerjaan"`
 	DeskripsiPekerjaan  *string `bson:"deskripsi_pekerjaan,omitempty" json:"deskripsi_pekerjaan,omitempty"`
-	IsDeleted           bool    `bson:"isdeleted" json:"-"`
 }
 
 type UpdatePekerjaan struct {
@@ -89,5 +87,21 @@ type UpdatePekerjaan struct {
 	TanggalSelesaiKerja *string `bson:"tanggal_selesai_kerja,omitempty" json:"tanggal_selesai_kerja"`
 	StatusPekerjaan     string  `bson:"status_pekerjaan,omitempty" json:"status_pekerjaan"`
 	DeskripsiPekerjaan  *string `bson:"deskripsi_pekerjaan,omitempty" json:"deskripsi_pekerjaan,omitempty"`
-	IsDeleted           bool    `bson:"isdeleted,omitempty" json:"isdeleted"`
+}
+
+type PekerjaanTrash struct {
+	ID                  string     `bson:"_id,omitempty" json:"id"`
+	AlumniID            string     `bson:"alumni_id" json:"alumni_id"`
+	NamaPerusahaan      string     `bson:"nama_perusahaan" json:"nama_perusahaan"`
+	PosisiJabatan       string     `bson:"posisi_jabatan" json:"posisi_jabatan"`
+	BidangIndustri      string     `bson:"bidang_industri" json:"bidang_industri"`
+	LokasiKerja         string     `bson:"lokasi_kerja" json:"lokasi_kerja"`
+	GajiRange           *string    `bson:"gaji_range,omitempty" json:"gaji_range,omitempty"`
+	TanggalMulaiKerja   time.Time  `bson:"tanggal_mulai_kerja" json:"tanggal_mulai_kerja"`
+	TanggalSelesaiKerja *time.Time `bson:"tanggal_selesai_kerja,omitempty" json:"tanggal_selesai_kerja,omitempty"`
+	StatusPekerjaan     string     `bson:"status_pekerjaan" json:"status_pekerjaan"`
+	DeskripsiPekerjaan  *string    `bson:"deskripsi_pekerjaan,omitempty" json:"deskripsi_pekerjaan,omitempty"`
+	CreatedAt           time.Time  `bson:"created_at" json:"created_at"`
+	UpdatedAt           time.Time  `bson:"updated_at" json:"updated_at"`
+	DeletedAt           *time.Time `bson:"deleted_at,omitempty" json:"deleted_at,omitempty"`
 }
